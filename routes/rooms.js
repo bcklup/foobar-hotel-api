@@ -4,18 +4,27 @@ var router = express.Router();
 // Model
 const Room = require('../models/Room');
 
-/* GET rooms listing. */
+// Get all rooms
 router.get('/', async (req, res, next) => {
-  console.log('reaches here');
   try {
-    const rooms = await Room.find();
+    const rooms = await Room.find({}, { room_name: 1, accomodation: 1, beds: 1, bathrooms: 1 });
     res.json(rooms);
   } catch (err) {
     res.json(err);
   }
 });
 
-/* POST rooms listing */
+// Get specific room
+router.get('/:roomId', async (req, res, next) => {
+  try {
+    const room = await Room.findById(req.params.roomId);
+    res.json(room);
+  } catch (err) {
+    res.json({ message: err });
+  }
+})
+
+// Create room
 router.post('/', async (req, res, next) => {
   const room = new Room({
     _id: req.body._id,
